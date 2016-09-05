@@ -2,7 +2,8 @@ CC = gcc
 
 CFLAGS = -Wall -g
 
-SRCS = binary_tree.c linked_list.c hashmap.c heapsort.c
+SRCS = binary_tree.c linked_list.c hashmap.c  \
+	heapsort.c quick_sort.c merger_sort.c selection_sort.c insertion_sort.c
 
 OBJS = $(SRCS:.c=.o)
 

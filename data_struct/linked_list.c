@@ -55,7 +55,6 @@ int list_put_node(struct node * node)
 int list_add_tail(struct node *head, int value)
 {	
 	struct node *curr = NULL;
-	struct node *curr = NULL;
     struct node *prev = NULL;
     struct node *next = NULL;
 
@@ -68,7 +67,7 @@ int list_add_tail(struct node *head, int value)
 		return -1;
 	}
 
-	curr = list_get_node(int value);
+	curr = list_get_node(value);
 
 	prev = head->prev;
 	next = head;
@@ -169,7 +168,7 @@ int main()
 	struct node *head = NULL;
 
 	int ret = 0;
-	head = init_list();
+	head = list_get_node(9);
 
 	add_node(head, 5);
 	add_node(head, 7);

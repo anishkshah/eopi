@@ -26,8 +26,7 @@ void print_array(int *elements, int size, char *info)
 void verify_sort(int * elements, int low , int high)
 {
 	int iter = 0;
-	for(iter = low; iter < high-1; iter++) {
-		printf("%d \n", elements[iter] );
+	for(iter = low; iter < high; iter++) {
 		if(elements[iter] > elements[iter+1]) {
 			assert(0);
 		}
@@ -49,18 +48,22 @@ void merge_array(int *elements, int *aux_elements, int low, int mid, int high)
 	int l1 = low;
 	int l2 = mid+1;
 
-	verify_sort(elements, low, mid);
-	verify_sort(elements, mid+1, high);
 	for(iter = low ; iter<=high ; iter++){
 		aux_elements[iter] = elements[iter];
 	}
 
 	for(iter = low; iter <= high; iter++) {
-		if(l1 > mid) {
+
+		/* completed the low to mid array */
+		if(l1 > mid) {	
 			elements[iter] = aux_elements[l2++];
-		} else if(l2 > high) {
+		} 
+		/* completed the mid+1 to high array*/
+		else if(l2 > high) {
 			elements[iter] = aux_elements[l1++];	
-		} else if(aux_elements[l1] < aux_elements[l2]) {
+		} 
+		/* the elem[low] < elem[mid+1]*/
+		else if(aux_elements[l1] < aux_elements[l2]) {
 			elements[iter] = aux_elements[l1++];
 		}  else {
 			elements[iter] = aux_elements[l2++];
@@ -71,7 +74,7 @@ void merge_array(int *elements, int *aux_elements, int low, int mid, int high)
 void sort(int *elements, int *aux_elements, int low, int high)
 {	
 	int mid = low + (high - low) /2 ;
-	if(high > low) return;
+	if(low >= high) return;
 
 	sort(elements, aux_elements, low, mid);
 	sort(elements, aux_elements, mid+1, high);
