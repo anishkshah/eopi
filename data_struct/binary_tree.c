@@ -118,21 +118,21 @@ void print_inorder(struct node *head)
 struct node *del_node(struct node *head, int value)
 {
 	struct node *curr = NULL;
-	struct node *prev = NULL;
+	struct node *parent = NULL;
 
-	if(curr == NULL) {
-		printf("Element value %d  not found\n", value );
-		return head;
+	if(head == NULL) {
+		printf("Empty tree \n");
+		return NULL;
 	}
 
 	curr = head;
 
 	while(curr) {
 		if(value < curr->value && curr->left) {
-			prev = curr;
+			parent = curr;
 			curr = curr->left;
 		} else if(value > curr->value && curr->right) {
-			prev = curr;
+			parent = curr;
 			curr = curr->right;
 		} else {
 			break;
@@ -147,9 +147,9 @@ struct node *del_node(struct node *head, int value)
 	if(curr->left && curr->right) {
 		// fix me;
 	} else if(curr->left == NULL && curr->right) {
-		prev = curr->right;
-	}else if(curr->left == NULL && curr->left) {
-		prev = curr->left;
+		parent = curr->right;
+	} else if(curr->left == NULL && curr->left) {
+		parent = curr->left;
 	}
 	free(curr);
 	printf("Node deleted %d\n", value);

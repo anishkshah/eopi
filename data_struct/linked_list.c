@@ -2,79 +2,88 @@
 #include <stdlib.h>
 
 #define SUCCESS	0;
-#define FAILED	-1;
+#define FAILED -1;
+
+/*
+ *	Double Linked LIST
+ *
+ *	|head| <-> | n1 | <-> | n2 | <-> | n3 | <-> | n4 | ->
+ *
+ */
+
 
 struct node {
 	int value;
 	struct node *next;
+	struct node *prev;
 };
 
-struct node *init_list()
+/* Allocates and returns a new node from the list */
+struct node *list_get_node(int value)
 {
-	struct node *head = NULL;
-
-	head = malloc(sizeof(struct node));
-	if(head == NULL) {
+	struct node *node = NULL;
+	node = malloc(sizeof(struct node));
+	if(node == NULL) {
 		printf("Failed to allocate memory\n");
-		return NULL;
+		exit(1);
 	}
 
-	return head;
+	node->next = node->prev;
+	node->prev = node->next;
+	node->value = value;
+	return node;
 }
 
-int cleanup_list(struct node * head)
+/* Clean's up the head node of the linked list */
+int list_put_node(struct node * node)
 {
-	if(head == NULL) {
-		printf("Invalid head pointer\n");
+	if(node == NULL) {
+		printf("Invalid node pointer\n");
 		return -1;
 	}
 
-	if(head->next != NULL) {
-		printf("List not empty\n");
+	if(node->next = node->prev) {
+		printf("Head of the list\n");
 		return -1;
 	}
-
-	free(head);
-	printf("List deleted\n");
+	free(node);
 	return 0;
-
 }
 
 
-/* Returns 0 on success else -1 */
-int add_node(struct node *head ,int value)
+/* Adds the node to the list */
+int list_add_tail(struct node *head, int value)
 {	
-	struct node *temp = NULL;
+	struct node *curr = NULL;
 	struct node *curr = NULL;
     struct node *prev = NULL;
+    struct node *next = NULL;
 
-	if(head){
-		curr = head;
-	} else {
+    /*
+     *													   | n5 |
+     * |head| <-> | n1 | <-> | n2 | <-> | n3 | <-> | n4 |<-      ->|head|
+ 	 */
+	if(!head){
 		printf("Invalid head list not initalized\n");
 		return -1;
 	}
 
-	temp = malloc(sizeof(struct node));
-	if(temp == NULL) {
-		printf("Failed to allocate memory\n");
-		return -1;
-	}
+	curr = list_get_node(int value);
 
-	temp->next = NULL;
-	temp->value = value;
+	prev = head->prev;
+	next = head;
+
+	prev->next = curr;
+	next->prev = curr;
+	curr->next = next;
+	curr->prev = prev;
 	
-	while(curr) {
-		prev = curr;
-		curr = curr->next;
-	}
-	
-	prev->next = temp;
+	prev->next = curr;
 	return 0;
 }
 
 /* Returns 0 on success and -1 on failure after delete */
-int del_node(struct node *head, int value)
+int list_del_node(struct node *head, int value)
 {	
 	struct node *curr = NULL;
 	struct node *prev = NULL;
@@ -101,7 +110,7 @@ int del_node(struct node *head, int value)
 }
 
 /* Return 0 on success and -1 on failure after delete */
-int del_node_at_pos(struct node *head, int pos)
+int list_del_node_at_pos(struct node *head, int pos)
 {	
 	struct node *curr = NULL;
 	struct node *prev = NULL;
@@ -134,7 +143,7 @@ int del_node_at_pos(struct node *head, int pos)
 }
 
 /* print everthing from the head of list */
-void print_all(struct node *head)
+void list_print_all(struct node *head)
 {
 	struct node *curr = NULL;
 	
