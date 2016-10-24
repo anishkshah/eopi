@@ -170,26 +170,24 @@ int main()
 	int ret = 0;
 	head = list_get_node(9);
 
-	add_node(head, 5);
-	add_node(head, 7);
-	add_node(head, 8);
-	add_node(head, 9);
-	add_node(head, 3);
+	list_add_tail(head, 5);
+	list_add_tail(head, 7);
+	list_add_tail(head, 8);
+	list_add_tail(head, 9);
+	list_add_tail(head, 3);
 
 
-	print_all(head);
+	list_print_all(head);
 
-	del_node_at_pos(head, 2);
+	list_del_node_at_pos(head, 2);
 
-	print_all(head);
+	list_print_all(head);
 
-	del_node(head, 9);
-	del_node(head, 5);
-	del_node(head, 7);
+	list_del_node(head, 9);
+	list_del_node(head, 5);
+	list_del_node(head, 7);
 
-	cleanup_list(head);
-
-	print_all(head);
+	list_print_all(head);
 
 	return ret;
 }
