@@ -14,10 +14,10 @@
 
 void print_array(int *elements, int size, char *info)
 {
-	int iter = 0;
+	int i = 0;
 	printf("%s : ", info);
-	for(iter = 0; iter < size; iter++) {
-		printf("%d ", elements[iter]);
+	for(i = 0; i < size; i++) {
+		printf("%d ", elements[i]);
 	}
 	printf("\n");
 	return;
@@ -25,9 +25,9 @@ void print_array(int *elements, int size, char *info)
 
 void verify_sort(int * elements, int low , int high)
 {
-	int iter = 0;
-	for(iter = low; iter < high; iter++) {
-		if(elements[iter] > elements[iter+1]) {
+	int i = 0;
+	for(i = low; i < high; i++) {
+		if(elements[i] > elements[i+1]) {
 			assert(0);
 		}
 	}
@@ -44,29 +44,30 @@ void verify_sort(int * elements, int low , int high)
 
 void merge_array(int *elements, int *aux_elements, int low, int mid, int high)
 {
-	int iter = 0;
+	int i = 0;
 	int l1 = low;
 	int l2 = mid+1;
 
-	for(iter = low ; iter<=high ; iter++){
-		aux_elements[iter] = elements[iter];
+	// copy data in auxillary array
+	for(i = low ; i<=high ; i++){
+		aux_elements[i] = elements[i];
 	}
 
-	for(iter = low; iter <= high; iter++) {
+	for(i = low; i <= high; i++) {
 
 		/* completed the low to mid array */
 		if(l1 > mid) {	
-			elements[iter] = aux_elements[l2++];
+			elements[i] = aux_elements[l2++];
 		} 
 		/* completed the mid+1 to high array*/
 		else if(l2 > high) {
-			elements[iter] = aux_elements[l1++];	
+			elements[i] = aux_elements[l1++];	
 		} 
 		/* the elem[low] < elem[mid+1]*/
 		else if(aux_elements[l1] < aux_elements[l2]) {
-			elements[iter] = aux_elements[l1++];
+			elements[i] = aux_elements[l1++];
 		}  else {
-			elements[iter] = aux_elements[l2++];
+			elements[i] = aux_elements[l2++];
 		}
 	}
 }

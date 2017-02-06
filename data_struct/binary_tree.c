@@ -2,19 +2,21 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define TRUE 1
+#define FALSE 0
+
 struct node {
-	int value;
+	int 		value;
+	int 		count;				// number of child nodes
 	struct node *left;
 	struct node *right;
-	int count;
 };
 
 struct node* get_node(int value)
 {
 	struct node *new = NULL;
-	new = malloc(sizeof(struct node));
+	new = calloc(1, sizeof(struct node));
 	if(new) {
-		memset(new, 0 , sizeof(struct node));
 		new->value = value;
 	}
 	return new;
@@ -26,6 +28,7 @@ int get_size(struct node* node)
 	return 0;
 }
 
+/* Returns the node pointer with the value else NULL */
 struct node* find_node(struct node *head, int value)
 {
 	if(head == NULL) return NULL;
@@ -47,7 +50,6 @@ struct node* add_node(struct node *head, int value)
 
 	if(value > head->value) {
 		head->right = add_node(head->right, value);
-
 	} else if(value < head->value) {
 		head->left = add_node(head->left, value);
 	} else {
@@ -74,19 +76,45 @@ struct node* add_node(struct node *head, int value)
 
 int get_height(struct node *head)
 {
-	int height = 0;
+	int height = 1;
 	int height_left = 0;
 	int height_right = 0;
 
 	if(head == NULL) return height;
-	height = 1;
 	height_left = height + get_height(head->left);
 	height_right = height +  get_height(head->right);
 
-	if(height_right > height_left)
-		return height_right; 
-	else 
-		return height_left;
+	(height_right > height_left) ? return height_right : return height_left;
+}
+
+/*
+ *  Get the number of nodes < key/value.
+ *			  S  (8) ->size
+ *			 / \
+ *			/   \
+ *		   /     \
+ *		  E	      W	(3)
+ *		 / \      /\
+ * 		/   \    /  \
+ * 	(2)A     H  T    Z (1)
+ *	    \     
+ *       C
+ *
+ *	 For E -> rank is get_size(A) = 2
+ */
+int get_rank(struct node *head, int value)
+{
+	if(head ==  NULL) retun 0;
+
+	if(value < head->value) {
+		return get_rank(head->left, value)
+	} else if(value > head->value) {
+		return 1 + get_size(head->left) + get_rank(head->right, value);
+	} else {
+		// value == head->value
+		return get_size(head->left);
+	}
+
 }
 
 void print_inorder(struct node *head)
@@ -133,7 +161,23 @@ void print_pre_order(struct node *head)
  */
 
 /* dont use the return value */
-struct node* delete_min(struct node *root, bool free_memory)
+struct node* get_min(struct node *root)
+{	
+	struct node *min = NULL;
+	if(root) {
+	 	if(root->left == NULL) {
+			min = root;
+		} else {
+			min = get_min(root->left);
+		}
+	}
+
+	return min;
+}
+
+
+/* dont use the return value */
+struct node* delete_min(struct node *root, int free_memory)
 {	
 	struct node *replace = NULL;
 	if(root && root->left == NULL) {
@@ -141,13 +185,13 @@ struct node* delete_min(struct node *root, bool free_memory)
 		if(free_memory) free(root);
 		return replace;
 	}
-	root->left = delete_min(root->left);
+	root->left = delete_min(root->left, free_memory);
 	root->count = 1 + get_size(root->left) + get_size(root->right);
 	return root;
 }
 
 /* dont use the return value */
-struct node* delete_max(struct node *root, bool free_memory)
+struct node* delete_max(struct node *root, int free_memory)
 {	
 	struct node *replace = NULL;
 	if(root && root->right == NULL) {
@@ -155,12 +199,12 @@ struct node* delete_max(struct node *root, bool free_memory)
 		if(free_memory) free(root);
 		return replace;
 	}
-	root->right = delete_max(root->right);
+	root->right = delete_max(root->right, free_memory);
 	root->count = 1 + get_size(root->left) + get_size(root->right);
 	return root;
 }
 
-/*   Input stream: 5 3 9 7 1 4 13 2 0 11 15
+/*   Input stream: 5 3 9 7 1 4 13 2 11
  *
  *			 5
  *			/ \
@@ -168,9 +212,9 @@ struct node* delete_max(struct node *root, bool free_memory)
  *		  3	    9	 
  *		 /\     /\
  * 		/  \   /  \
- * 	   1    4 7   13  
- *	  /\    /  \   /\
- *   0  2       8 11 15  
+ * 	   1    4 7    13  
+ *	   \    /  \   /
+ *      2       8 11
  *
  */
 
@@ -200,7 +244,7 @@ struct node *del_node(struct node *head, int value)
 			return  curr->left;
 		}
 
-		/*  1: get_min right the repalcement node and save ptr
+		/*  1: get_min from curr's right, this is the repalcement node so save ptr
 		 *  2: del the that from the location not from mremory
 		 *  3: update it's children and its currents location
 		 *	
@@ -215,6 +259,7 @@ struct node *del_node(struct node *head, int value)
 
 	}
 
+	head->size = get_size(head->left) + get_size(head->right) + 1;
 	return replace;
 }
 
@@ -235,7 +280,7 @@ int main(int argc, char const *argv[])
 	add_node(head, 13);
 	add_node(head, 2);
 	add_node(head, 0);
-	delete_min(head);
+	delete_min(head, TRUE);
 	temp = add_node(head, 11);
 	temp = add_node(head, 15);
 

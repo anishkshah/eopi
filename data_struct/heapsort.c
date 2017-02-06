@@ -1,60 +1,81 @@
+#include <stdio.h>
+#include <stdlib.h>
 
-#define LCHILD(x) 2 * x + 1
-#define RCHILD(x) 2 * x + 2
-#define PARENT(x) (x - 1) / 2
+#define LCHILD(X) 2*X
+#define RCHILD(X) 2*X + 1
+#define PARENT(X) (X/2)
 
-typedef struct node {
-    int data ;
-} node ;
-
-typedef struct minHeap {
+struct binary_heap {
     int size ;
-    node *elem ;
-} minHeap ;
+    int *elements ;
+}
 
-minHeap initMinHeap(int size) {
-    minHeap hp ;
-    hp.size = 0 ;
+struct binary_heap init_heap(int size)
+{
+    struct binary_heap *hp = NULL;
+
+    hp = malloc(sizeof(struct binary_heap));
+    if(hp == NULL) return NULL;
+    hp->size = size;
+    hp->elements = malloc(size * (sizeof(int)));
+    memset(hp->elements, 0, size * (sizeof(int)));
     return hp ;
 }
 
-void insertNode(minHeap *hp, int data) {
-    // allocating space
-    if(hp->size) {
-        hp->elem = realloc(hp->elem, (size + 1) * sizeof(node)) ;
-    } else {
-        hp->elem = malloc(sizeof(node)) ;
-    }
-
-    // initializing the node with value
-    node nd ;
-    nd.data = data ;
-
-    // Positioning the node at the right position in the min heap
-    int i = (hp->size)++ ;
-    while(i && nd.data < hp->elem[PARENT(i)].data) {
-        hp->elem[i] = hp->elem[PARENT(i)] ;
-        i = PARENT(i) ;
-    }
-    hp->elem[i] = nd ;
+void swap(struct binary_heap *hp, int pos_x, int psx_y)
+{
+    int temp = hp->elements[x];
+    hp->elements[x] = hp->elements[y] ;
+    hp->elements[y] = temp;
 }
 
-void swap(node *n1, node *n2) {
-    node temp = *n1 ;
-    *n1 = *n2 ;
-    *n2 = temp ;
+/*
+ *  heapify_sink_down : To fix the heap property at given position k for binary_heap hp 
+ *
+ *
+ */
+void heapify_sink_down(struct binary_heap *hp, int k)
+{
+    if(hp == NULL) return;
+
+    while(k > 1 && (hp->elements[k/2] < hp->elements[k])) {
+        swap(hp, k/2, k);
+        k = k/2;
+    }
+
+    return;
 }
 
-void heapify(minHeap *hp, int i) {
-    int smallest = (LCHILD(i) < hp->size && hp->elem[LCHILD(i)].data < hp->elem[i].data) ? LCHILD(i) : i ;
-    if(RCHILD(i) < hp->size && hp->elem[RCHILD(i)].data < hp->elem[largest].data) {
-        smallest = RCHILD(i) ;
+
+/*
+ *  heapify_swim_up : To fix the heap property at given position k for binary_heap hp
+ *
+ *
+ */
+void heapify_swim_up(struct binary_heap *hp, int k)
+{
+    if(hp == NULL) return;
+
+    while(k > 1 && (hp->elements[k/2] < hp->elements[k])) {
+        swap(hp, k/2, k);
+        k = k/2;
     }
-    if(smallest != i) {
-        swap(&(hp->elem[i]), &(hp->elem[smallest])) ;
-        heapify(hp, smallest) ;
+
+    return;
+}
+
+void insert_node(struct binary_heap *hp, int value)
+{
+    if(hp == NULL) return NULL;
+
+    /* elements[0] has the current position */
+    if(hp->size > hp->elements[0]) {
+        hp->elements[0]++;
+        hp->elements[hp->elements[0]] = value;
+        heapify_swim_up(hp, hp->elements[0]);
     }
 }
+
 
 void deleteNode(minHeap *hp) {
     if(hp->size) {

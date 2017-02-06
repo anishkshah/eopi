@@ -59,8 +59,8 @@ int list_add_tail(struct node *head, int value)
     struct node *next = NULL;
 
     /*
-     *													   | n5 |
-     * |head| <-> | n1 | <-> | n2 | <-> | n3 | <-> | n4 |<-      ->|head|
+     *
+     * |head| <-> | n1 | <-> | n2 | <-> | n3 | <-> | n4 |<- | n5 | -> |head|
  	 */
 	if(!head){
 		printf("Invalid head list not initalized\n");
