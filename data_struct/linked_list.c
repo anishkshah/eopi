@@ -4,81 +4,67 @@
 #define SUCCESS	0;
 #define FAILED -1;
 
+
+
+
 /*
  *	Double Linked LIST
  *
- *	|head| <-> | n1 | <-> | n2 | <-> | n3 | <-> | n4 | ->
+ *	|head| -> | n1 | -> | n2 | -> | n3 | ->
  *
  */
-
 
 struct node {
 	int value;
 	struct node *next;
-	struct node *prev;
 };
 
-/* Allocates and returns a new node from the list */
+/* allocate a new node for the list */
 struct node *list_get_node(int value)
 {
 	struct node *node = NULL;
-	node = malloc(sizeof(struct node));
+	node = calloc(1, sizeof(struct node));
 	if(node == NULL) {
 		printf("Failed to allocate memory\n");
 		exit(1);
 	}
 
-	node->next = node->prev;
-	node->prev = node->next;
 	node->value = value;
 	return node;
 }
 
-/* Clean's up the head node of the linked list */
-int list_put_node(struct node * node)
-{
-	if(node == NULL) {
-		printf("Invalid node pointer\n");
-		return -1;
+/* Adds the node to the tail of the list and return the new node */
+struct node* list_add_tail(struct node *head, int value)
+{	
+    struct node *curr = NULL;
+    struct node *prev = NULL;
+
+    curr = list_get_node(value);
+	if(head == NULL){
+	   return curr;
 	}
 
-	if(node->next = node->prev) {
-		printf("Head of the list\n");
-		return -1;
-	}
-	free(node);
-	return 0;
+    while(head) {
+        prev = head;
+        head = head->next;
+    }
+
+    prev->next = curr;
+	return curr;
 }
 
+/* Adds the node to the head of the list and return the new head */
+struct node* list_add_head(struct node *head, int value)
+{   
+    struct node *curr = NULL;
 
-/* Adds the node to the list */
-int list_add_tail(struct node *head, int value)
-{	
-	struct node *curr = NULL;
-    struct node *prev = NULL;
-    struct node *next = NULL;
+    curr = list_get_node(value);
+    if(head == NULL){
+       return curr;
+    }
 
-    /*
-     *
-     * |head| <-> | n1 | <-> | n2 | <-> | n3 | <-> | n4 |<- | n5 | -> |head|
- 	 */
-	if(!head){
-		printf("Invalid head list not initalized\n");
-		return -1;
-	}
-
-	curr = list_get_node(value);
-
-	prev = head->prev;
-	next = head;
-
-	prev->next = curr;
-	next->prev = curr;
-	curr->next = next;
-	curr->prev = prev;
-	
-	prev->next = curr;
-	return 0;
+    curr->next = head;
+    return curr;
 }
 
 /* Returns 0 on success and -1 on failure after delete */
@@ -92,8 +78,7 @@ int list_del_node(struct node *head, int value)
 		return -1;
 	}
 
-	curr = head->next;
-	prev = head;
+	curr = head;
 
 	while(curr && curr->value != value) {
 		prev = curr;
@@ -102,7 +87,8 @@ int list_del_node(struct node *head, int value)
 	
 	if(curr && curr->value == value){
 		prev->next = curr->next;
-		free(curr);
+		curr->next = NULL;
+        free(curr);
 		curr == NULL;
 	}
 	return 0;
@@ -120,19 +106,14 @@ int list_del_node_at_pos(struct node *head, int pos)
 		return -1;
 	}
 
-	if(head->next == NULL) {
-		printf("No elemets in the list \n");
-		return -1;
-	}
-
 	curr = head->next;
 	prev = head;
 
 	while(curr) {
 		count++;
+        prev = curr;
+        curr = curr->next;
 		if(count == pos) break;
-		prev = curr;
-		curr = curr->next;
 	}
 	if(count == pos) {
 		prev->next = curr->next;

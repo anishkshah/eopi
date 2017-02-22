@@ -61,17 +61,17 @@ struct node* add_node(struct node *head, int value)
 
 /*   Input stream: 5 3 9 7 1 13 2 0 11 15
  *
- *			 5
- *			/ \
- *		   /   \
- *		  3	    9	 
- *		 /      /\
- * 		/      /  \
- * 	   1      8   11
- *	  /\     /
- *   0  2   7
- *		   /
- *		  6	
+ *           5
+ *          / \
+ *         /   \
+ *        3	    9	 
+ *       /      /\
+ *      /      /  \
+ *     1      8   11
+ *    / \    /
+ *   0   2  7
+ *         /
+ *        6	
  */
 
 int get_height(struct node *head)
@@ -89,18 +89,18 @@ int get_height(struct node *head)
 
 /*
  *  Get the number of nodes < key/value.
- *			  S  (8) ->size
- *			 / \
- *			/   \
- *		   /     \
- *		  E	      W	(3)
- *		 / \      /\
- * 		/   \    /  \
- * 	(2)A     H  T    Z (1)
- *	    \     
+ *            S  (8) ->size
+ *           / \
+ *          /   \
+ *         /     \
+ *     (4)E       W(3)
+ *       / \      /\
+ *      /   \    /  \
+ *  (2)A     H  T    Z (1)
+ *	    \
  *       C
  *
- *	 For E -> rank is get_size(A) = 2
+ *  For E -> rank is get_size(A) = 2
  */
 int get_rank(struct node *head, int value)
 {
@@ -114,9 +114,22 @@ int get_rank(struct node *head, int value)
 		// value == head->value
 		return get_size(head->left);
 	}
-
 }
 
+/*
+ *    Tree Traversal
+ *           7
+ *          / \
+ *         /   \
+ *        4     8	 
+ *       / \
+ *      /   \
+ *     1     6
+ *
+ *   Depth first search
+ */
+
+/*  Inorder (Left, Root, Right) : 1 4 6 7 8     */
 void print_inorder(struct node *head)
 {
 	if(head == NULL) return;
@@ -126,6 +139,7 @@ void print_inorder(struct node *head)
 	return;
 }
 
+/*  Postorder (Left, Right, Root) : 1 6 4 8 7   */
 void print_post_order(struct node *head)
 {
 	if(head == NULL) return;
@@ -135,6 +149,7 @@ void print_post_order(struct node *head)
 	return;
 }
 
+/*  Preorder (Root, Left, Right) : 7 4 1 6 8    */
 void print_pre_order(struct node *head)
 {
 	if(head == NULL) return;
@@ -144,29 +159,62 @@ void print_pre_order(struct node *head)
 	return;
 }
 
+/*
+ * Tree Traversal Breath First Search/ Level Order Traversal
+ */
+
+struct node_fifo {
+	struct node *node;
+	struct node_fifo *next;
+}
+
+void put_fif0(struct node_fifo **queue, struct node *bt_node)
+{
+	struct node_fifo *new = NULL;
+	new = calloc(1, sizeof(struct node_fifo));
+	new->node = head;
+}
+
+void bfs(struct node* head)
+{
+    struct node *traveler = head;
+    struct node **queue = NULL;
+
+    while(traveler) {
+        printf("%d\n", traveler->value);
+
+        if(traveler->left) {
+            put_fif0(queue, traveler->left);
+        }
+
+        if(traveler->right) {
+            put_fif0(queue, traveler->right);
+        }
+
+        traveler = (struct node *)get_fifo(queue);
+    }
+ }
 
 /* Delete min - del 1 from this tree
  *
- *			 5
- *			/ \
- *		   /   \
- *		  3	    9	 
- *		 /      /\
- * 		/      /  \
- * 	   1      8   11
- *	  	\		 /
- *       2		10
- *
- *	
+ *           5
+ *          / \
+ *         /   \
+ *        3     9	 
+ *       /      /\
+ *      /      /  \
+ *     1      8   11
+ *	    \        /
+ *       2     10
  */
 
 /* dont use the return value */
 struct node* get_min(struct node *root)
 {	
-	struct node *min = NULL;
-	if(root) {
-	 	if(root->left == NULL) {
-			min = root;
+    struct node *min = NULL;
+        if(root) {
+            if(root->left == NULL) {
+                min = root;
 		} else {
 			min = get_min(root->left);
 		}
@@ -206,14 +254,14 @@ struct node* delete_max(struct node *root, int free_memory)
 
 /*   Input stream: 5 3 9 7 1 4 13 2 11
  *
- *			 5
- *			/ \
- *		   /   \
- *		  3	    9	 
- *		 /\     /\
- * 		/  \   /  \
- * 	   1    4 7    13  
- *	   \    /  \   /
+ *           5
+ *          / \
+ *         /   \
+ *        3     9	 
+ *       /\     /\
+ *      /  \   /  \
+ *     1    4 7    13  
+ *     \       \   /
  *      2       8 11
  *
  */
