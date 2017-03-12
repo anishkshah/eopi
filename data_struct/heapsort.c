@@ -1,8 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-
-
 struct binary_heap {
     int size ;
     int *elements ;
@@ -45,7 +43,7 @@ void heapify_sink_down(struct binary_heap *hp, int k)
             smallest = child_l;
         }
         if((child_r < hp->elements[0]) && hp->elements[child_r] < hp->elements[smallest]) {
-            smallest = child_l;
+            smallest = child_r;
         }
 
         if(smallest == k) break; //heapifying done

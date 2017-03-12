@@ -64,27 +64,33 @@ struct graph* create_graph(int V)
 
 	return graph;
 }
+
 /* add edge to the uni-directed graph */
+/*
+	
+
+ */
 void add_edge(struct graph *g, int src, int des)
 {
 	struct aj_node *new_node_des = new_node(des);
+	struct aj_node *new_node_src = new_node(src);
+
 	new_node_des->next = graph->array[src].head;
 	graph->array[src].head = new_node_des;
 
 	//for uni directed graph
-	new_node_src = new_node(src);
-	new_node_des->next = graph->array[src].head;
-	graph->array[src].head = new_node;  
+	new_node_src->next = graph->array[des].head;
+	graph->array[des].head = new_node_src;  
 }
 
 void dfs_util(struct graph *g, int V, boolean *visited)
 {
 	struct aj_node = NULL;
 	int new_V = 0;
-	visited[V] = TRUE;
-	printf("%d ", V);
 
+	visited[V] = TRUE;
 	aj_node = g->array[V];
+
  	while(aj_node != NULL) {
  		new_V = aj_node->des;
  		if(visited[new_V] != TRUE) {
@@ -98,8 +104,7 @@ void dfs_util(struct graph *g, int V, boolean *visited)
 void dfs(int V)
 {
 	int i = 0;
-	boolean *visited = malloc(V * sizeof(boolean));
-	memset(visited, 0, V * sizeof(boolean));
+	boolean *visited = calloc(V, sizeof(boolean));
 
 	for(i = 0; i < V; i++) {
 		if(visited[i] == FALSE)
@@ -125,8 +130,7 @@ void dfs(int V)
 void bfs(int V)
 {
     list queue;
-    boolean *visited = malloc(V * sizeof(boolean));
-    memset(visited, 0, V * sizeof(boolean));
+    boolean *visited = calloc(V, sizeof(boolean));
 
     visited[V] = true;
     queue.push(V);

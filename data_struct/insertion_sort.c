@@ -31,14 +31,14 @@ void swap(int *a, int *b)
 int insertion_sort(int *elements, int size)
 {
 	int iter = 0;
-	int next = 0;
+	int prev = 0;
 
-	for(iter = 0; iter < size -2 ; iter ++) {
-		next = iter + 1;
-		while(next) {
-			if(elements[next] < elements[next-1]) {
-				swap(&elements[next], &elements[next-1]);
-				next--;
+	for(iter = 1; iter < size ; iter ++) {
+		prev = iter;
+		while(prev) {
+			if(elements[prev] < elements[prev-1]) {
+				swap(&elements[prev], &elements[prev-1]);
+				prev--;
 			} else {
 				/* no need to swap anymore*/
 				break;

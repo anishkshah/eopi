@@ -76,15 +76,18 @@ struct node* add_node(struct node *head, int value)
 
 int get_height(struct node *head)
 {
-	int height = 1;
 	int height_left = 0;
 	int height_right = 0;
 
-	if(head == NULL) return height;
-	height_left = height + get_height(head->left);
-	height_right = height +  get_height(head->right);
+	if(head == NULL) return 0;
+	height_left = 1 + get_height(head->left);
+	height_right = 1 +  get_height(head->right);
 
-	(height_right > height_left) ? return height_right : return height_left;
+	if(height_right > height_left) {
+		return height_right;
+	} else {
+		return height_left;
+	}
 }
 
 /*
@@ -104,10 +107,10 @@ int get_height(struct node *head)
  */
 int get_rank(struct node *head, int value)
 {
-	if(head ==  NULL) retun 0;
+	if(head ==  NULL) return 0;
 
 	if(value < head->value) {
-		return get_rank(head->left, value)
+		return get_rank(head->left, value);
 	} else if(value > head->value) {
 		return 1 + get_size(head->left) + get_rank(head->right, value);
 	} else {
@@ -164,15 +167,32 @@ void print_pre_order(struct node *head)
  */
 
 struct node_fifo {
-	struct node *node;
+	void *data;
 	struct node_fifo *next;
-}
+};
 
 void put_fif0(struct node_fifo **queue, struct node *bt_node)
 {
 	struct node_fifo *new = NULL;
 	new = calloc(1, sizeof(struct node_fifo));
-	new->node = head;
+	new->data = bt_node;
+	new->next = *queue;
+	*queue = new;
+
+}
+
+void get_fif0(struct node_fifo **queue, struct node *bt_node)
+{
+	struct node_fifo *new_head = NULL;
+	struct node_fifo *curr_head = *queue;
+	void *data = NULL;
+
+	if(curr_head == NULL) return;
+
+	data = curr_head->data;
+	new_head =  curr_head->next;
+	free(curr_head)
+	*queue = new_head;
 }
 
 void bfs(struct node* head)
@@ -193,7 +213,7 @@ void bfs(struct node* head)
 
         traveler = (struct node *)get_fifo(queue);
     }
- }
+}
 
 /* Delete min - del 1 from this tree
  *
@@ -222,7 +242,6 @@ struct node* get_min(struct node *root)
 
 	return min;
 }
-
 
 /* dont use the return value */
 struct node* delete_min(struct node *root, int free_memory)
@@ -307,7 +326,7 @@ struct node *del_node(struct node *head, int value)
 
 	}
 
-	head->size = get_size(head->left) + get_size(head->right) + 1;
+	head->count = get_size(head->left) + get_size(head->right) + 1;
 	return replace;
 }
 
@@ -345,5 +364,9 @@ int main(int argc, char const *argv[])
 
 	printf("height %d\n", get_height(head));
 
+	del_node(head, 9);
+	printf("print inorder\n"); print_inorder(head); printf("\n");
+	
+	bfs(head);
 	return 0;
 }
