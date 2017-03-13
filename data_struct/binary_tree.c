@@ -166,26 +166,38 @@ void print_pre_order(struct node *head)
  * Tree Traversal Breath First Search/ Level Order Traversal
  */
 
-struct node_fifo {
-	void *data;
-	struct node_fifo *next;
+
+struct fifo {
+	int head;
+	int tail;
+	struct node **data;	
 };
 
-void put_fif0(struct node_fifo **queue, struct node *bt_node)
+void put_fif0(struct fifo **queue, struct node *bt_node)
 {
 	struct node_fifo *new = NULL;
+
+	if(*queue == NULL) {
+		return;
+	}
+
 	new = calloc(1, sizeof(struct node_fifo));
 	new->data = bt_node;
-	new->next = *queue;
-	*queue = new;
-
+	*queue->tail->next = new; 
+	new->next = *queue->head;
+	*queue->head = new;
+	if(*queue->head == NULL)
+	{
+		*queue->head = *queue->tail;
+	}
+	return;
 }
 
-void get_fif0(struct node_fifo **queue, struct node *bt_node)
+struct node *get_fif0(struct fifo **queue, struct node *bt_node)
 {
 	struct node_fifo *new_head = NULL;
-	struct node_fifo *curr_head = *queue;
-	void *data = NULL;
+	struct node_fifo *curr_head = *queue->t
+	struct node *data = NULL;
 
 	if(curr_head == NULL) return;
 
@@ -193,26 +205,37 @@ void get_fif0(struct node_fifo **queue, struct node *bt_node)
 	new_head =  curr_head->next;
 	free(curr_head)
 	*queue = new_head;
+	return data;
+}
+
+struct fifo *fifo_init(int size)
+{
+	struct fifo *queue = NULL;
+	queue = calloc(1, sizeof(struct fifo));
+	queue->data = calloc(size, sizeof(struct node *));
+	return queue;
 }
 
 void bfs(struct node* head)
 {
+	struct fifo *queue = NULL;
     struct node *traveler = head;
-    struct node **queue = NULL;
 
     while(traveler) {
         printf("%d\n", traveler->value);
 
         if(traveler->left) {
-            put_fif0(queue, traveler->left);
+            put_fif0(&queue, traveler->left);
         }
 
         if(traveler->right) {
-            put_fif0(queue, traveler->right);
+            put_fif0(%queue, traveler->right);
         }
 
-        traveler = (struct node *)get_fifo(queue);
+        traveler = (struct node *)get_fifo(&queue);
     }
+
+    if(queue) free(queue);
 }
 
 /* Delete min - del 1 from this tree

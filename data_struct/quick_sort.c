@@ -36,6 +36,7 @@ void swap(int *a, int *b)
 	*a = temp; 
 }
 
+/* Returns the piovot element which is in the correct position */
 int partion(int *elements, int low , int high)
 {
 	int l = low + 1;
