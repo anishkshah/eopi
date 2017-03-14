@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define TRUE 1
-#define FALSE 0
+#define TRUE 	1
+#define FALSE 	0
 
 struct node {
 	int 		value;
@@ -167,72 +167,89 @@ void print_pre_order(struct node *head)
  */
 
 
-struct fifo {
-	int head;
-	int tail;
-	struct node **data;	
+struct fifo_node{
+	struct node * data;
+	struct fifo_node *next;
 };
 
-void put_fif0(struct fifo **queue, struct node *bt_node)
-{
-	struct node_fifo *new = NULL;
+struct fifo{
+    struct fifo_node *head;
+    struct fifo_node *tail;
+};
 
-	if(*queue == NULL) {
+void put_fif0(struct fifo *queue, struct node *data)
+{
+	struct fifo_node *new = NULL;
+
+	if(queue == NULL) {
 		return;
 	}
 
-	new = calloc(1, sizeof(struct node_fifo));
-	new->data = bt_node;
-	*queue->tail->next = new; 
-	new->next = *queue->head;
-	*queue->head = new;
-	if(*queue->head == NULL)
-	{
-		*queue->head = *queue->tail;
-	}
+	new = malloc(sizeof(struct fifo_node));
+	new->data = data;
+	new->next = NULL;
+    if(queue->head == NULL)
+    {
+        queue->head = new;
+        queue->tail = new;
+        return;
+    }
+    
+    queue->tail->next = new; 
+	queue->tail = queue->tail->next;
 	return;
 }
 
-struct node *get_fif0(struct fifo **queue, struct node *bt_node)
+struct node *get_fif0(struct fifo *queue)
 {
-	struct node_fifo *new_head = NULL;
-	struct node_fifo *curr_head = *queue->t
+	struct fifo_node *new_head = NULL;
+	struct fifo_node *curr_head = NULL;
 	struct node *data = NULL;
 
-	if(curr_head == NULL) return;
+	if(queue == NULL) return NULL;
 
-	data = curr_head->data;
-	new_head =  curr_head->next;
-	free(curr_head)
-	*queue = new_head;
+    if(queue->head == NULL)
+    {
+        queue->head == NULL;
+        queue->tail == NULL;
+        return NULL;
+    }
+    else
+    {
+        data = queue->head->data;
+        curr_head = queue->head;
+        queue->head = queue->head->next;
+    }
+    
+    free(curr_head);
 	return data;
 }
 
-struct fifo *fifo_init(int size)
+struct fifo *fifo_init()
 {
 	struct fifo *queue = NULL;
 	queue = calloc(1, sizeof(struct fifo));
-	queue->data = calloc(size, sizeof(struct node *));
 	return queue;
 }
 
+
 void bfs(struct node* head)
 {
-	struct fifo *queue = NULL;
+	struct fifo *queue = fifo_init();
     struct node *traveler = head;
 
     while(traveler) {
         printf("%d\n", traveler->value);
 
         if(traveler->left) {
-            put_fif0(&queue, traveler->left);
+            put_fif0(queue, traveler->left);
         }
 
         if(traveler->right) {
-            put_fif0(%queue, traveler->right);
+            put_fif0(queue, traveler->right);
         }
 
-        traveler = (struct node *)get_fifo(&queue);
+        traveler = (struct node *)get_fif0(queue);
     }
 
     if(queue) free(queue);
@@ -370,7 +387,7 @@ int main(int argc, char const *argv[])
 	add_node(head, 13);
 	add_node(head, 2);
 	add_node(head, 0);
-	delete_min(head, TRUE);
+	//delete_min(head, TRUE);
 	temp = add_node(head, 11);
 	temp = add_node(head, 15);
 
