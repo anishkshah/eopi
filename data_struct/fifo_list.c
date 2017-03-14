@@ -4,8 +4,8 @@
 #include <assert.h>
 
 struct fifo_node{
-	int data;
-	struct fifo_node *next;
+    int data;
+    struct fifo_node *next;
 };
 
 struct fifo{
@@ -15,15 +15,15 @@ struct fifo{
 
 void put_fif0(struct fifo *queue, int node)
 {
-	struct fifo_node *new = NULL;
+    struct fifo_node *new = NULL;
 
-	if(queue == NULL) {
-		return;
-	}
+    if(queue == NULL) {
+        return;
+    }
 
-	new = calloc(1, sizeof(struct fifo_node));
-	new->data = node;
-	
+    new = calloc(1, sizeof(struct fifo_node));
+    new->data = node;
+    
     if(queue->head == NULL)
     {
         queue->head = new;
@@ -32,17 +32,17 @@ void put_fif0(struct fifo *queue, int node)
     }
     
     queue->tail->next = new; 
-	queue->tail = queue->tail->next;
-	return;
+    queue->tail = queue->tail->next;
+    return;
 }
 
 int get_fif0(struct fifo *queue)
 {
-	struct fifo_node *new_head = NULL;
-	struct fifo_node *curr_head = NULL;
-	int data = 0;
+    struct fifo_node *new_head = NULL;
+    struct fifo_node *curr_head = NULL;
+    int data = 0;
 
-	if(queue == NULL) return -1;
+    if(queue == NULL) return -1;
 
     if(queue->head == NULL)
     {
@@ -58,14 +58,14 @@ int get_fif0(struct fifo *queue)
     }
     
     free(curr_head);
-	return data;
+    return data;
 }
 
 struct fifo *fifo_init()
 {
-	struct fifo *queue = NULL;
-	queue = calloc(1, sizeof(struct fifo));
-	return queue;
+    struct fifo *queue = NULL;
+    queue = calloc(1, sizeof(struct fifo));
+    return queue;
 }
 
 int main()

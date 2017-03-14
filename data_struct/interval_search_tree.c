@@ -5,23 +5,23 @@
  *
  * Given Input : (17, 19) - (5, 8) - (4, 8) - (15, 18) - (7, 10) - (16, 22) - (21, 24)
  *
- *						(17, 19) -  Y_max 24
- *						/		\
- *					   /		 \	
- *		  Y_max 22 (5, 8)		(21, 24) - Y_max 24
- *				   /    \
- *				  /      \
- *	   Y_max 8 (4, 8)    (15, 18) Y_max 22
- *						/		\
- *					   /	     \
- *				  (7, 10)		(16, 22) Y_max 22
+ *                      (17, 19) -  Y_max 24
+ *                      /       \
+ *                     /         \  
+ *        Y_max 22 (5, 8)       (21, 24) - Y_max 24
+ *                 /    \
+ *                /      \
+ *     Y_max 8 (4, 8)    (15, 18) Y_max 22
+ *                      /       \
+ *                     /         \
+ *                (7, 10)       (16, 22) Y_max 22
  *
  */
 
 struct node {
-	int X;
-	int Y;
-	int Y_max;
+    int X;
+    int Y;
+    int Y_max;
 
     struct node *left;
     struct node *right;
@@ -112,7 +112,7 @@ struct node * search(struct node* head, int X, int Y)
 
 int main()
 {
-	struct node * head = insert(NULL, 17, 19);
+    struct node * head = insert(NULL, 17, 19);
 
     insert(head, 17, 19);
     insert(head, 5, 8);
@@ -126,5 +126,5 @@ int main()
 
     printf("Intersection for (21, 23) --> (%d, %d)\n", intersecting->X, intersecting->Y);
 
-	return 0;
+    return 0;
 }
