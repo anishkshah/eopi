@@ -1,22 +1,23 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 struct aj_node
 {
     int des;
     struct aj_node *next;
-}
+};
 
 struct aj_list
 {
     struct aj_node *head;
-}
+};
 
 struct graph
 {
     int V;
     struct aj_list *array;
-}
+};
 
 /* Unidirected GRAPH with Adjacency list.
 
@@ -36,12 +37,12 @@ struct graph
     E - Edges 
 */
 
-struct aj_node * new_node(int value)
+struct aj_node * new_node(int dest)
 {
     struct aj_node *new = NULL;
     new = malloc(sizeof(struct aj_node));
     if(new) {
-        new->value = value;
+        new->des = dest;
         new->next = NULL;
     }
     return new;
@@ -50,8 +51,6 @@ struct aj_node * new_node(int value)
 struct graph* create_graph(int V)
 {
     struct graph *graph = NULL;
-    int vertices = 0;
-    struct aj_node vertex_node= NULL;
 
     graph = malloc(sizeof(struct graph));
 
@@ -68,48 +67,47 @@ void add_edge(struct graph *g, int src, int des)
     struct aj_node *new_node_des = new_node(des);
     struct aj_node *new_node_src = new_node(src);
 
-    new_node_des->next = graph->array[src].head;
-    graph->array[src].head = new_node_des;
+    new_node_des->next = g->array[src].head;
+    g->array[src].head = new_node_des;
 
     //for uni directed graph
-    new_node_src->next = graph->array[des].head;
-    graph->array[des].head = new_node_src;  
+    new_node_src->next = g->array[des].head;
+    g->array[des].head = new_node_src;  
 }
 
-void dfs_util(struct graph *g, int V, boolean *visited)
+void dfs_util(struct graph *g, int vertex, int *visited)
 {
-    struct aj_node = NULL;
+    struct aj_node *node= NULL;
     int new_V = 0;
 
-    // Visiting the Node V
+    // Visiting the Node at - vertex
     
-    visited[V] = TRUE;
-    aj_node = g->array[V];
+    visited[vertex] = 1;
+
+    printf("%d -- ", vertex);
+
+    node = g->array[vertex].head;
         
-    while(aj_node != NULL)
+    while(node != NULL)
     {
-        new_V = aj_node->des;
-        if(visited[new_V] != TRUE)
+        new_V = node->des;
+        if(visited[new_V] != 1)
         {
             dfs_util(g, new_V, visited);
         }
-        aj_node = aj_node->next;
+        node = node->next;
     }
 }
 
 /* traversal of all the vertices reachable form V */
-void dfs(int V)
+void dfs(struct graph *g, int vertex)
 {
     int i = 0;
-    boolean *visited = calloc(V, sizeof(boolean));
+    int *visited = calloc(g->V, sizeof(int));
 
-    for(i = 0; i < V; i++)
-    {
-        if(visited[i] == FALSE)
-        {
-            DFS_util(i, visited);
-        }
-    }
+    printf("DFS : ");
+    dfs_util(g, vertex, visited);
+    printf("\n");
 }
 
 
@@ -126,7 +124,7 @@ void dfs(int V)
  *                  d = 0   1   2  
  */
 
-
+/*
 void bfs(int V)
 {
     list queue;
@@ -135,16 +133,34 @@ void bfs(int V)
     visited[V] = true;
     queue.push(V);
 }
+*/
 
 int main()
 {
-    struct graph G = NULL;
+    int V = 7;
+    struct graph *g = NULL;
 
-    G = create_graph(6);
-    if(G == NULL) {
+    g = create_graph(V);
+    if(g == NULL) {
         return -1;
     }
 
+    add_edge(g, 1, 4);
+    add_edge(g, 1, 3);
+    add_edge(g, 1, 2);
+    add_edge(g, 1, 0);
+    add_edge(g, 2, 3);
+    add_edge(g, 4, 0);
+    add_edge(g, 3, 4);
+    add_edge(g, 0 ,1);
 
-
+    add_edge(g, 6 ,5);
+   
+    dfs(g, 0);
+    dfs(g, 1);
+    dfs(g, 2);
+    dfs(g, 3);
+    dfs(g, 4);
+    dfs(g, 5);
+    return 0;
 }

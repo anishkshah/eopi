@@ -4,11 +4,8 @@
 #define SUCCESS	0;
 #define FAILED -1;
 
-
-
-
 /*
- *	Double Linked LIST
+ *      Single Linked LIST
  *
  *	|head| -> | n1 | -> | n2 | -> | n3 | ->
  *

@@ -14,12 +14,12 @@ struct node {
 
 struct node* get_node(int value)
 {
-    struct node *new = NULL;
-    new = calloc(1, sizeof(struct node));
-    if(new) {
-        new->value = value;
+    struct node *queue_temp = NULL;
+    queue_temp = calloc(1, sizeof(struct node));
+    if(queue_temp) {
+        queue_temp->value = value;
     }
-    return new;
+    return queue_temp;
 }
 
 int get_size(struct node* node)
@@ -179,23 +179,23 @@ struct fifo{
 
 void put_fif0(struct fifo *queue, struct node *data)
 {
-    struct fifo_node *new = NULL;
+    struct fifo_node *queue_temp = NULL;
 
     if(queue == NULL) {
         return;
     }
 
-    new = malloc(sizeof(struct fifo_node));
-    new->data = data;
-    new->next = NULL;
+    queue_temp = malloc(sizeof(struct fifo_node));
+    queue_temp->data = data;
+    queue_temp->next = NULL;
     if(queue->head == NULL)
     {
-        queue->head = new;
-        queue->tail = new;
+        queue->head = queue_temp;
+        queue->tail = queue_temp;
         return;
     }
     
-    queue->tail->next = new; 
+    queue->tail->next = queue_temp; 
     queue->tail = queue->tail->next;
     return;
 }
