@@ -57,7 +57,10 @@ int partion(int *elements, int low , int high)
 		}
 	}
 	/* swap pivot elemet to its correct position the h*/
-	swap(&elements[low], &elements[h]);
+	if(elements[low] > elements[h])
+	{
+		swap(&elements[low], &elements[h]);
+	}
 	return h;
 }
 
