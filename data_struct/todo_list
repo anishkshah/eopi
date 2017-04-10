@@ -1,14 +1,16 @@
-linked list				done
-circular linked list			done
+linked list				    done
+circular linked list		done
 stacks as array				done
-stacks as linked list 			done
+stacks as linked list       done
 queues as array				done
-queues as linked list 			done
+queues as linked list       done
 binary search tree			done
-BST
+BST                         bfs left
 Red Black Tree				done
-heaps
-Hash-maps
-Quick Sort
-Heap Sort
-Insertion Sort
+heaps					    done
+Hash-maps				
+Quick Sort				    done
+Heap Sort				    done
+Insertion Sort				done
+Graph					    done
+Djikstras				    left

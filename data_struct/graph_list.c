@@ -1,10 +1,11 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include "helper.c"
 
 struct aj_node
 {
-    int des;
+    int vertex;
     struct aj_node *next;
 };
 
@@ -37,15 +38,15 @@ struct graph
     E - Edges 
 */
 
-struct aj_node * new_node(int dest)
+struct aj_node * new_fifo_node(int vertex)
 {
-    struct aj_node *new = NULL;
-    new = malloc(sizeof(struct aj_node));
-    if(new) {
-        new->des = dest;
-        new->next = NULL;
+    struct aj_node *new_fifo = NULL;
+    new_fifo = malloc(sizeof(struct aj_node));
+    if(new_fifo) {
+        new_fifo->vertex = vertex;
+        new_fifo->next = NULL;
     }
-    return new;
+    return new_fifo;
 }
 
 struct graph* create_graph(int V)
@@ -60,40 +61,38 @@ struct graph* create_graph(int V)
     return graph;
 }
 
-/* add edge to the uni-directed graph */
+/* add edge to the directed graph */
 
 void add_edge(struct graph *g, int src, int des)
 {
-    struct aj_node *new_node_des = new_node(des);
-    struct aj_node *new_node_src = new_node(src);
+    struct aj_node *new_fifo_node_vertex = new_fifo_node(des);
 
-    new_node_des->next = g->array[src].head;
-    g->array[src].head = new_node_des;
+    new_fifo_node_vertex->next = g->array[src].head;
+    g->array[src].head = new_fifo_node_vertex;
 
-    //for uni directed graph
-    new_node_src->next = g->array[des].head;
-    g->array[des].head = new_node_src;  
 }
 
 void dfs_util(struct graph *g, int vertex, int *visited)
 {
     struct aj_node *node= NULL;
-    int new_V = 0;
+    int new_fifo_V = 0;
 
     // Visiting the Node at - vertex
     
-    visited[vertex] = 1;
-
-    printf("%d -- ", vertex);
+    if(!visited[vertex])
+    {
+    	visited[vertex] = 1;
+		printf("%d -- ", vertex);
+	}
 
     node = g->array[vertex].head;
         
     while(node != NULL)
     {
-        new_V = node->des;
-        if(visited[new_V] != 1)
+        new_fifo_V = node->vertex;
+        if(visited[new_fifo_V] != 1)
         {
-            dfs_util(g, new_V, visited);
+            dfs_util(g, new_fifo_V, visited);
         }
         node = node->next;
     }
@@ -111,6 +110,51 @@ void dfs(struct graph *g, int vertex)
 }
 
 
+void topoloical_sort_util(struct graph *g, int vertex, int *visited, struct stack_node **stack)
+{
+    struct aj_node *node= NULL;
+    int new_fifo_V = 0;
+
+    // Visiting the Node at - vertex
+
+    visited[vertex] = 1;
+    node = g->array[vertex].head;
+        
+    while(node != NULL)
+    {
+        new_fifo_V = node->vertex;
+        if(visited[new_fifo_V] != 1)
+        {
+            topoloical_sort_util(g, new_fifo_V, visited, stack);
+        }
+        node = node->next;
+    }
+
+    printf("%d -- ", vertex);
+    push_stack(stack, vertex);
+    return;
+}
+
+/* traversal of all the vertices reachable form V */
+void topoloical_sort(struct graph *g)
+{
+    int i = 0;
+    struct stack_node *stack = NULL;
+    int *visited = calloc(g->V, sizeof(int));
+
+    printf("topoloical_sort : ");
+    for (i = 0; i < g->V; ++i)
+    {
+    	if(visited[i] == 0)
+    	{
+    		topoloical_sort_util(g, i, visited, &stack);
+    	}
+    }
+    //printf("topoloical_sort_util: ");
+    printf("\n");
+    stack_print(&stack);
+}
+
 /* Breath First Search - computes the shortest path(fewest no of edges)
  *
  *
@@ -124,16 +168,59 @@ void dfs(struct graph *g, int vertex)
  *                  d = 0   1   2  
  */
 
-/*
-void bfs(int V)
+void bfs(struct graph *g, int V)
 {
-    list queue;
-    boolean *visited = calloc(V, sizeof(boolean));
+    struct fifo *queue = fifo_init();
+    struct aj_node *vertex_node = NULL;
+    int vertex = 0;
+    int *visited = calloc(V, sizeof(int));
 
-    visited[V] = true;
-    queue.push(V);
+    put_fif0(queue, V);
+    printf("BFS : ");
+    while(!queue_empty(queue))
+    {
+        vertex =  get_fif0(queue);
+
+        printf("%d -- ", vertex);
+        visited[vertex] = 1;
+
+        vertex_node = g->array[vertex].head;
+
+        while(vertex_node !=NULL)
+        {
+            if(visited[vertex_node->vertex] != 1)
+            {
+                put_fif0(queue, vertex_node->vertex);
+                visited[vertex_node->vertex] = 1;
+            }
+            vertex_node = vertex_node->next;
+        }
+
+    }
+    printf("\n");
 }
-*/
+
+
+
+void print_graph(struct graph *g, int max_vertex)
+{
+	struct aj_node *vertex_node = NULL;
+	int  i = 0;
+
+	for (i = 0; i < max_vertex; ++i)
+	{
+		printf("%d", i);
+		vertex_node = g->array[i].head;
+
+		while(vertex_node)
+		{
+			printf(" --> %d", vertex_node->vertex);
+			vertex_node = vertex_node->next;
+		}
+		printf("\n");
+	}
+	return;
+}
 
 int main()
 {
@@ -145,15 +232,20 @@ int main()
         return -1;
     }
 
+    add_edge(g, 0 ,1);
+	add_edge(g, 0 ,6);
     add_edge(g, 1, 4);
     add_edge(g, 1, 3);
     add_edge(g, 1, 2);
     add_edge(g, 1, 0);
     add_edge(g, 2, 3);
-    add_edge(g, 4, 0);
+    add_edge(g, 2, 4);
+    add_edge(g, 2, 5);
     add_edge(g, 3, 4);
-    add_edge(g, 0 ,1);
-
+    add_edge(g, 4, 0);
+    add_edge(g, 5, 4);
+    add_edge(g, 6 ,1);
+    add_edge(g, 6 ,2);
     add_edge(g, 6 ,5);
    
     dfs(g, 0);
@@ -162,5 +254,9 @@ int main()
     dfs(g, 3);
     dfs(g, 4);
     dfs(g, 5);
+
+    print_graph(g, V);
+    bfs(g, 0);
+    topoloical_sort(g);
     return 0;
 }
