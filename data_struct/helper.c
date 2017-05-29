@@ -19,20 +19,6 @@ struct stack_node{
     struct stack_node *next;
 };
 
-void stack_print(struct stack_node **stack)
-{
-	int data = 0;
-	int ret = 0;
-
-	while(ret == 0)
-	{
-		ret = pop_stack(stack, &data);
-		if(ret == 0) printf("%d -- ", data);
-	}
-	printf("\n");
-	return;
-}
-
 int push_stack(struct stack_node **stack, int data)
 {
 	struct stack_node *temp = NULL;
@@ -64,6 +50,20 @@ int pop_stack(struct stack_node **stack , int *data)
 	*stack = (*stack)->next;
 	free(temp);
 	return 0;
+}
+
+void stack_print(struct stack_node **stack)
+{
+    int data = 0;
+    int ret = 0;
+
+    while(ret == 0)
+    {
+        ret = pop_stack(stack, &data);
+        if(ret == 0) printf("%d -- ", data);
+    }
+    printf("\n");
+    return;
 }
 
 struct fifo *fifo_init()

@@ -155,6 +155,51 @@ void topoloical_sort(struct graph *g)
     stack_print(&stack);
 }
 
+
+int is_cyclic_util(struct graph *g, int vertex, int *visited, int *rec_stack)
+{
+    struct aj_node *node= NULL;
+    int new_fifo_V = 0;
+
+    // Visiting the Node at - vertex
+    if(!visited[vertex])
+    {
+        visited[vertex] = 1;
+        rec_stack[vertex] = 1;
+    
+        node = g->array[vertex].head;
+            
+        while(node != NULL)
+        {
+            new_fifo_V = node->vertex;
+            if(visited[new_fifo_V] != 1 && rec_stack[new_fifo_V] != 1)
+            {
+                return is_cyclic_util(g, new_fifo_V, visited, rec_stack);
+            }
+            else if(rec_stack[new_fifo_V] == 1)
+            {
+                return 1;
+            }
+            node = node->next;
+        }
+    }
+    rec_stack[new_fifo_V] = 0;
+    return 0;
+}
+
+/* traversal of all the vertices reachable form V */
+void is_cycylic(struct graph *g, int vertex)
+{
+    int i = 0;
+    int is_cycylic = 0;
+    int *visited = calloc(g->V, sizeof(int));
+    int *rec_stack = calloc(g->V, sizeof(int));
+
+    is_cycylic = is_cyclic_util(g, vertex, visited, rec_stack);
+    printf("vertex %d is is_cycylic %d\n", vertex, is_cycylic);
+}
+
+
 /* Breath First Search - computes the shortest path(fewest no of edges)
  *
  *
@@ -233,12 +278,12 @@ int main()
     }
 
     add_edge(g, 0 ,1);
-	add_edge(g, 0 ,6);
+	add_edge(g, 0 ,2);
     add_edge(g, 1, 4);
     add_edge(g, 1, 3);
     add_edge(g, 1, 2);
     add_edge(g, 1, 0);
-    add_edge(g, 2, 3);
+    add_edge(g, 3, 2);
     add_edge(g, 2, 4);
     add_edge(g, 2, 5);
     add_edge(g, 3, 4);
@@ -248,6 +293,12 @@ int main()
     add_edge(g, 6 ,2);
     add_edge(g, 6 ,5);
    
+    for (int i = 0; i < V; ++i)
+    {
+        is_cycylic(g, i);
+    }
+
+
     dfs(g, 0);
     dfs(g, 1);
     dfs(g, 2);

@@ -8,7 +8,7 @@
  */
 #include <stdio.h>
 
-print_array(int *elements, int size, char *info)
+print_array(int* elements, int size, char *info)
 {
 	int iter = 0;
 	printf("%s : ", info);
@@ -33,7 +33,7 @@ int insertion_sort(int *elements, int size)
 	int iter = 0;
 	int prev = 0;
 
-	for(iter = 1; iter < size ; iter ++) {
+	for(iter = 0; iter < size ; iter ++) {
 		prev = iter;
 		while(prev) {
 			if(elements[prev] < elements[prev-1]) {
@@ -50,7 +50,7 @@ int insertion_sort(int *elements, int size)
 
 int main(int argc, char const *argv[])
 {	
-	int test1[7] = {4, 5, 1, 8, 9, 0, 1};
+	int test1[7] = {4, 5, 1, 4, 9, 0, 1};
 	int test2[8] = {1, 1, 1, 2, 2, 0, 1, 15};
 	int test3[7] = {4, 0, -1, -8, -9, 0, 1};
 			
