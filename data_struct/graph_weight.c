@@ -96,9 +96,22 @@ void dump_dijkstra(struct graph *g, int *dist_to, int *edge_to)
 
 void dijkstra_util(struct graph *g, int src, int *dist_to, int *edge_to)
 {
-
+	struct aj_node *vertex_node = NULL;
 	dist_to[src] = 0;
+	int completed = 0;
+	struct aj_node *closest = NULL;
 
+	while(completed != g->V)
+	{
+		vertex_node = g->array[src].head;
+
+		closest = get_closed(vertex_node);
+
+		dist_to[];
+		vertex_node = closest->vertex;
+
+		completed++;
+	}
     
 
 }
