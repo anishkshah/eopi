@@ -120,6 +120,36 @@ int get_rank(struct node *head, int value)
 }
 
 /*
+ * Get Range - do an in-order search
+ *
+ * O(R + logN) -> R is number of keys and N is number of nodes
+ *
+ * key1 is less than key2
+ */
+
+void print_range(struct node *root, int key1, int key2)
+{
+    if(!root) return;
+
+    if(root->value < key1)
+        print_range(root->left, key1, key2);
+
+    if(root->value >= key1 && root->value =< key2)
+    {
+        printf(" %d\t", root->value);
+    }
+
+    if(root->value < key1)
+        print_range(root->left, key1, key2);
+
+    if(root->value > key2)
+        print_range(root->right, key1, key2);
+
+    return;
+}
+
+
+/*
  *    Tree Traversal
  *           7
  *          / \
